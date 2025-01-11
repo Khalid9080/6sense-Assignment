@@ -7,6 +7,7 @@ const Home = () => {
         { email: '', ageRange: 'Pick one' } // Initial field
     ]);
     const [errors, setErrors] = useState([]); // State to store error messages for each field
+    const [posts, setPosts] = useState([]); // State to store form submissions
 
     // Function to add a new form field
     const addFormField = () => {
@@ -38,8 +39,10 @@ const Home = () => {
         // Check if there are any errors, and if there are none, submit the form
         const flatErrors = newErrors.flat();
         if (flatErrors.length === 0) {
-            // Proceed with form submission (e.g., send the data to the backend)
-            alert('Form Submitted');
+            // Add the new post data to the posts state
+            setPosts([...formFields]);
+            console.log("Updated Posts:", [...posts, ...formFields]); // Log posts to debug
+           
         }
     };
 
@@ -59,8 +62,9 @@ const Home = () => {
                             <div className="text-3xl p-4">
                                 <button
                                     type="button"
-                                    className="btn btn-sm btn-square text-3xl"
+                                    className="btn btn-sm btn-square text-3xl ml-4 text-green-700"
                                     onClick={addFormField}
+                                    
                                 >
                                     <FiPlusSquare />
                                 </button>
@@ -139,6 +143,37 @@ const Home = () => {
                         </div>
                     </form>
                 </div>
+            </div>
+
+            {/* Table for displaying posts */}
+            <h1 className="text-4xl text-center mt-10 font-bold">Posted Data</h1>
+            <div className="lg:w-3/4 mx-auto overflow-x-auto mt-10 card bg-base-100 w-full shrink-0 shadow-2xl">
+                <table className="table">
+                    {/* Table Head */}
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Email</th>
+                            <th>Age Range</th>
+                        </tr>
+                    </thead>
+                    {/* Table Body */}
+                    <tbody>
+                        {posts.length > 0 ? (
+                            posts.map((post, index) => (
+                                <tr key={index}>
+                                    <th>{index + 1}</th>
+                                    <td>{post.email}</td>
+                                    <td>{post.ageRange}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="3" className="text-center">No posts added yet</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
             </div>
         </div>
     );
