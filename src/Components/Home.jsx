@@ -6,16 +6,41 @@ const Home = () => {
     const [formFields, setFormFields] = useState([
         { email: '', ageRange: 'Pick one' } // Initial field
     ]);
+    const [errors, setErrors] = useState([]); // State to store error messages for each field
 
     // Function to add a new form field
     const addFormField = () => {
         setFormFields([...formFields, { email: '', ageRange: 'Pick one' }]);
+        setErrors([...errors, []]); // Add an empty error array for the new field
     };
 
     // Function to delete a specific form field by index
     const deleteFormField = (indexToRemove) => {
-        // Filter the fields and remove the one at the specific index
         setFormFields(formFields.filter((_, index) => index !== indexToRemove));
+        setErrors(errors.filter((_, index) => index !== indexToRemove)); // Remove corresponding error
+    };
+
+    // Function to handle form submission
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        
+        // Check for empty fields and create error messages for them
+        const newErrors = formFields.map((field, index) => {
+            const fieldErrors = [];
+            if (!field.email) fieldErrors.push("Email is required.");
+            if (field.ageRange === 'Pick one') fieldErrors.push("Age range is required.");
+            return fieldErrors;
+        });
+
+        // Update the errors state with the new error messages
+        setErrors(newErrors);
+
+        // Check if there are any errors, and if there are none, submit the form
+        const flatErrors = newErrors.flat();
+        if (flatErrors.length === 0) {
+            // Proceed with form submission (e.g., send the data to the backend)
+            alert('Form Submitted');
+        }
     };
 
     return (
@@ -28,7 +53,7 @@ const Home = () => {
                     </p>
                 </div>
                 <div className="card bg-base-100 w-full shrink-0 shadow-2xl">
-                    <form className="card-body">
+                    <form className="card-body" onSubmit={handleSubmit}>
                         <div className="flex flex-row justify-between items-center -mb-4">
                             <h1>Personal Information</h1>
                             <div className="text-3xl p-4">
@@ -44,7 +69,7 @@ const Home = () => {
 
                         {/* Dynamic Form Fields */}
                         {formFields.map((field, index) => (
-                            <div className="flex flex-row gap-2 mt-4" key={index}> {/* Using index as the key */}
+                            <div className="flex flex-row gap-5 mt-4" key={index}>
                                 <div className="form-control flex-1">
                                     <label className="label">
                                         <span className="label-text">User Email</span>
@@ -54,22 +79,25 @@ const Home = () => {
                                         name={`email-${index}`}
                                         placeholder="Add your email"
                                         className="input input-bordered"
-                                        value={field.email} // Bind value for email input
+                                        value={field.email}
                                         onChange={(e) => {
                                             const updatedFields = [...formFields];
                                             updatedFields[index].email = e.target.value;
                                             setFormFields(updatedFields);
                                         }}
-                                        required
                                     />
+                                    {/* Show error message for email */}
+                                    {errors[index] && errors[index].includes("Email is required.") && (
+                                        <p className="text-red-600 mt-2">Email is required.</p>
+                                    )}
                                 </div>
                                 <label className="form-control flex-1">
-                                    <div className="label ">
+                                    <div className="label">
                                         <span className="label-text">Select Your Age Range</span>
                                         <button
                                             type="button"
                                             className='text-2xl text-red-600 -mt-4 btn btn-sm btn-square'
-                                            onClick={() => deleteFormField(index)} // Delete the specific index
+                                            onClick={() => deleteFormField(index)}
                                         >
                                             <MdOutlineDeleteSweep />
                                         </button>
@@ -77,7 +105,7 @@ const Home = () => {
                                     <select
                                         name={`ageRange-${index}`}
                                         className="select select-bordered"
-                                        value={field.ageRange} // Bind value for ageRange
+                                        value={field.ageRange}
                                         onChange={(e) => {
                                             const updatedFields = [...formFields];
                                             updatedFields[index].ageRange = e.target.value;
@@ -96,12 +124,16 @@ const Home = () => {
                                         <option value="51-55">51-55</option>
                                         <option value="56-60">56-60</option>
                                     </select>
+                                    {/* Show error message for select */}
+                                    {errors[index] && errors[index].includes("Age range is required.") && (
+                                        <p className="text-red-600 mt-2">Age range is required.</p>
+                                    )}
                                 </label>
                             </div>
                         ))}
 
                         <div className="form-control mt-6">
-                            <button type="submit" value="Add post" className="btn btn-primary">
+                            <button type="submit" className="btn btn-primary">
                                 Add Post
                             </button>
                         </div>
