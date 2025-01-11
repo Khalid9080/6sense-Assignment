@@ -50,9 +50,9 @@ const Home = () => {
         <div>
             <div className="lg:w-3/4 mx-auto my-10">
                 <div className="text-center">
-                    <h1 className="text-5xl font-bold">Add Your Lost and Found Items</h1>
+                    <h1 className="text-5xl font-bold">Add Your Data</h1>
                     <p className="py-6">
-                        Please fill out the form below to add details about your lost or found item. Make sure to provide accurate information to help others identify and return the item to its rightful owner.
+                        Please fill out the form below to add details about your email and age. Make sure to provide accurate information to help others identify.
                     </p>
                 </div>
                 <div className="card bg-base-100 w-full shrink-0 shadow-2xl">
@@ -138,7 +138,7 @@ const Home = () => {
 
                         <div className="form-control mt-6">
                             <button type="submit" className="btn btn-primary">
-                                Add Post
+                                Submit
                             </button>
                         </div>
                     </form>
